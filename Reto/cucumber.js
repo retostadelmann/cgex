@@ -37,29 +37,44 @@ function init() {
         capsuleControls.thetaLength
     );
 
-    //geometry = new THREE.BoxGeometry( 10, 10, 10);
     let loader = new THREE.TextureLoader();
 
+    // Rick Texture
     material = new THREE.MeshBasicMaterial({
         map: loader.load('PickleRick.jpg'),
     });
 
+    // Add object to scene
     mesh = new THREE.Mesh( geometry, material );
+    mesh.position.y = -7;
+    mesh.rotation.y = 1.8;
     scene.add( mesh );
+
+    // BG Texture
+    const bgTexture = loader.load('bg.png');
+    scene.background = bgTexture;
+
+    // Light
+    {
+        const color = 0xFFFFFF;
+        const intensity = 1;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(-1, 2, 4);
+        scene.add(light);
+    }
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
-
 }
 
 function animate() {
 
     requestAnimationFrame( animate );
 
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.02;
+    mesh.rotation.y += -0.05;
+    mesh.position.x += -0.01;
+    mesh.position.z += -0.00075;
 
     renderer.render( scene, camera );
-
 }
