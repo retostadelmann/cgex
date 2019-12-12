@@ -130,6 +130,15 @@
             renderer.render(bgScene, camera);
             renderer.render( scene, camera );
         }
+
+        document.addEventListener('keydown', function(e) {
+            console.log('keypressed');
+            if (e.keyCode == 65) {
+                console.log('audio');
+                var audio = new Audio('Theme.mp3');
+                audio.play();
+            }
+        });
     </script>
 </body>
 </html>
