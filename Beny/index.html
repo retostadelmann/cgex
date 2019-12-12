@@ -14,7 +14,7 @@
 
     <script>
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(120, window.innerWidth/window.innerHeight, 0.1, 5000);
+        var camera = new THREE.PerspectiveCamera(80, window.innerWidth/window.innerHeight, 0.1, 5000);
         camera.position.z = 200;
         camera.position.y = 80;
         camera.position.x = 140;
@@ -43,7 +43,7 @@
             camera.updateProjectionMatrix();
         });
 
-        function drawPickle(scene, lenght, bend, radius)
+        function pickleRick(lenght, bend, radius)
         {
 
             let loader = new THREE.TextureLoader();
@@ -87,12 +87,16 @@
             botSphereMesh.geometry.translate(0, -rickHeight/2, 0);
             topSphereMesh.geometry.translate(0, -rickHeight/2, 0);
 
-            scene.add(tubeMesh);
-            scene.add(botSphereMesh);
-            scene.add(topSphereMesh);
+            var pickleRick = new THREE.Group();
+            pickleRick.add(tubeMesh);
+            pickleRick.add(topSphereMesh);
+            pickleRick.add(botSphereMesh);
+
+            return pickleRick;
         }
 
-        drawPickle(scene, 60, 18, 10);
+        var rick = pickleRick(80, 18, 12);
+        scene.add(rick);
 
         // Light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
