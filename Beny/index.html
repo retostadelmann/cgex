@@ -10,60 +10,110 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+    <script type="text/javascript" src="OrbitControls.js"></script>
 
     <script>
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 3000);
-        camera.position.z = 200;
-        camera.position.y = 10;
+        camera.position.z = 120;
+        camera.position.y = 20;
         camera.position.x = 0;
 
         var renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setClearColor("#e5e5e5");
+
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.rotateSpeed = .5;
+        controls.enableDamping = true;
+        controls.dampingFactor = .05;
+
+        var axesHelper = new THREE.AxesHelper( 100 );
+        axesHelper.geometry = new THREE.Geometry().fromBufferGeometry( axesHelper.geometry );
+        scene.add( axesHelper );
 
         window.addEventListener('resize', () =>{
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
 
             camera.updateProjectionMatrix();
-        })
+        });
 
         function drawPickle(scene, lenght, bend, radius)
         {
-            var material = new THREE.MeshLambertMaterial({color: 0x5E8D2F});
+            let loader = new THREE.TextureLoader();
+            var texture = loader.load('PickleRick.jpg');
+            texture.offset = new THREE.Vector2(0.2, 0.35);
+            texture.repeat.set(0.6, 0.6);
+
+            centerMaterial = new THREE.MeshPhongMaterial({
+                map: texture,
+                bumpMap: loader.load('bumpmap.jpg'),
+                bumpScale: 0.5
+            });
+
+            sphereMaterial = new THREE.MeshPhongMaterial({
+                map: loader.load('rickSphere.png'),
+                bumpMap: loader.load('bumpmapSphere.jpg'),
+                bumpScale: 0.5
+            });
+
 
             //Tube Geometry
             var start = new THREE.Vector3(0, 0, 0);
             var middle = new THREE.Vector3(bend, lenght/2, 0);
             var end = new THREE.Vector3(0, lenght, 0);
+            var rickHeight =  radius + lenght;
 
             var curveQuad = new THREE.QuadraticBezierCurve3(start, middle, end);
 
             var tube = new THREE.TubeGeometry(curveQuad, 200, radius, 200, false);
-            var tubeMesh = new THREE.Mesh( tube, material );
-            scene.add(tubeMesh);
+            var tubeMesh = new THREE.Mesh( tube, centerMaterial );
+            tubeMesh.rotation.y = Math.PI / 2;
 
             //Spheres
             bottomSphere = new THREE.SphereGeometry( radius, 200, 200);
-            var botSphereMesh = new THREE.Mesh( bottomSphere, material );
-            scene.add(botSphereMesh);
+            var botSphereMesh = new THREE.Mesh( bottomSphere, sphereMaterial );
 
             topSphere = new THREE.SphereGeometry( radius, 200, 200);
-            var topSphereMesh = new THREE.Mesh( topSphere, material );
-            topSphereMesh.geometry.translate(0,lenght,0)
+            var topSphereMesh = new THREE.Mesh( topSphere, sphereMaterial );
+            topSphereMesh.geometry.translate(0,lenght,0);
+
+            tubeMesh.geometry.translate(0, -rickHeight/2, 0);
+            botSphereMesh.geometry.translate(0, -rickHeight/2, 0);
+            topSphereMesh.geometry.translate(0, -rickHeight/2, 0);
+
+            scene.add(tubeMesh);
+            scene.add(botSphereMesh);
             scene.add(topSphereMesh);
         }
 
         drawPickle(scene, 30, 10, 5);
 
-        var light = new THREE.DirectionalLight(0xFFFFFF, 1, 500);
-        light.position.set(10, 0, 25);
+        // Light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        var light = new THREE.DirectionalLight(0xFFFFFF, 0.5, 500);
+        light.position.set(-30, 10, -10);
         scene.add(light);
 
+        var light2 = new THREE.DirectionalLight(0xFFFFFF, 0.5, 500);
+        light2.position.set(20, 10, 25);
+        scene.add(light2);
+
+
         renderer.render(scene,camera);
+
+        animate();
+
+        function animate(){
+            requestAnimationFrame( animate );
+            controls.update();
+            renderer.render( scene, camera );
+        }
     </script>
 </body>
 </html>
