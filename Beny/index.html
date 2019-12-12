@@ -14,7 +14,7 @@
 
     <script>
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(80, window.innerWidth/window.innerHeight, 0.1, 5000);
+        var camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 5000);
         camera.position.z = 200;
         camera.position.y = 80;
         camera.position.x = 140;
@@ -123,9 +123,22 @@
 
         animate();
 
+        var start = null;
+        var audioPlays = false;
         function animate(){
             requestAnimationFrame( animate );
             controls.update();
+            if(audioPlays){
+                var progress = (new Date().getTime() - start.getTime()) / 1000;
+                if(progress <= 10){
+                    rick.rotation.y += 0.7 * Math.sin(Math.PI * 0.1 * progress);
+                    rick.position.y += 1.3 * Math.sin(Math.PI * 0.4 * progress);
+                }
+                else{
+                    audioPlays = false;
+                }
+            }
+
             render();
         }
 
@@ -137,7 +150,9 @@
 
         document.addEventListener('keydown', function(e) {
             console.log('keypressed');
-            if (e.keyCode == 65) {
+            if (e.keyCode == 65 && !audioPlays) {
+                start = new Date();
+                audioPlays = true;
                 console.log('audio');
                 var audio = new Audio('Theme.mp3');
                 audio.play();
