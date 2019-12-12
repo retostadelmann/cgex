@@ -51,13 +51,13 @@
             centerMaterial = new THREE.MeshPhongMaterial({
                 map: texture,
                 bumpMap: loader.load('bumpmap.jpg'),
-                bumpScale: 0.5
+                bumpScale: 0.6
             });
 
             sphereMaterial = new THREE.MeshPhongMaterial({
                 map: loader.load('rickSphere.png'),
                 bumpMap: loader.load('bumpmapSphere.jpg'),
-                bumpScale: 0.5
+                bumpScale: 0.6
             });
 
 
@@ -90,7 +90,7 @@
             scene.add(topSphereMesh);
         }
 
-        drawPickle(scene, 30, 10, 5);
+        drawPickle(scene, 45, 10, 5);
 
         // Light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
