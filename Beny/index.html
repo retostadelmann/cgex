@@ -119,7 +119,10 @@
         function animate(){
             requestAnimationFrame( animate );
             controls.update();
+            render();
+        }
 
+        function render(){
             bgMesh.position.copy(camera.position);
             renderer.render(bgScene, camera);
             renderer.render( scene, camera );
