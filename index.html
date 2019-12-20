@@ -30,12 +30,6 @@
         controls.enableDamping = true;
         controls.dampingFactor = .05;
 
-        /*
-        var axesHelper = new THREE.AxesHelper( 100 );
-        axesHelper.geometry = new THREE.Geometry().fromBufferGeometry( axesHelper.geometry );
-        scene.add( axesHelper );
-        */
-
         window.addEventListener('resize', () =>{
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
